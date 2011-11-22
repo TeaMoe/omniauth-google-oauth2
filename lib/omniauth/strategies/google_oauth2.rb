@@ -40,7 +40,7 @@ module OmniAuth
       end
 
       def user_info
-        user_data.merge(name: user_data['displayName'])
+        user_data.merge(:name => user_data['displayName'])
       end
 
       def email_data
