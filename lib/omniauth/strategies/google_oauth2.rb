@@ -32,7 +32,7 @@ module OmniAuth
       
       def auth_hash
         OmniAuth::Utils.deep_merge(super, {
-          'uid' => user_info['uid'],
+          'uid' => user_info['email'],
           'info' => user_info,
           'credentials' => {'expires_at' => @access_token.expires_at},
           'extra' => {'user_hash' => email_data}
