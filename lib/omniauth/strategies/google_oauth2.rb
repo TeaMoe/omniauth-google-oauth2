@@ -28,8 +28,7 @@ module OmniAuth
         opts[:scope] << " https://#{google_email_scope}" unless opts[:scope] =~ %r[http[s]?:\/\/#{google_email_scope}]
         options[:authorize_params] = opts.merge(options[:authorize_params])
       end
-      
-      
+
       def auth_hash
         OmniAuth::Utils.deep_merge(super, {
           'uid' => user_info['email'],
@@ -46,13 +45,19 @@ module OmniAuth
       def email_data
         @email_data ||=
           @access_token.get("https://www.googleapis.com/userinfo/email?alt=json").parsed
+        Rails.logger.debug @email_data.inspect
+        @email_data
       end
-      
+
       def user_data
-        @user_data ||=
-          @access_token.get("https://www.googleapis.com/plus/v1/people/me?alt=json").parsed
+        @user_data ||= begin
+                         @access_token.get("https://www.googleapis.com/plus/v1/people/me?alt=json").parsed
+                       rescue ::OAuth2::Error => e
+                         # Don't care if user has no Google Plus Profile
+                         {}
+                       end
       end
-      
+
     end
   end
 end
